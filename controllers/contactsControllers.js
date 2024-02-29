@@ -34,7 +34,7 @@ export const createContact = ctrlWrapper(async (req, res) => {
 
 export const updateContact = ctrlWrapper(async (req, res) => {
     const { id } = req.params;
-    const result = await contactsService.removeContact(id, req.body); 
+    const result = await contactsService.updateContactById(id, req.body); 
         if (!result) {
         throw new HttpError(404, `Contact with id=${id} not found`);
     }
