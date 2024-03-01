@@ -1,17 +1,17 @@
 import fs from "fs/promises";
 import path from "path";
-import nanoid from "nanoid";
+import  { nanoid } from "nanoid";
 
 const contactsPath = path.resolve("db", "contacts.json");
 
 const updateContacts = async (listContacts) => fs.writeFile(contactsPath, JSON.stringify(listContacts, null, 2));
 
-export const listContacts = async () => {
+  const listContacts = async () => {
   const data = await fs.readFile(contactsPath);
   return JSON.parse(data);
 };
 
-export const getContactById = async (contactId) => {
+  const getContactById = async (contactId) => {
   const listOfContacts = await listContacts();
   const needContact = listOfContacts.find(
     (contact) => contact.id === contactId
@@ -19,7 +19,7 @@ export const getContactById = async (contactId) => {
   return needContact || null;
 };
 
-export const addContact = async ({ name, email, phone }) => {
+  const addContact = async ({ name, email, phone }) => {
   const listOfContacts = await listContacts();
   const addedContact = { id: nanoid(), name, email, phone };
   listOfContacts.push(addedContact);
@@ -27,7 +27,7 @@ export const addContact = async ({ name, email, phone }) => {
   return addedContact;
 };
 
-export const removeContact = async (contactId) => {
+  const removeContact = async (contactId) => {
   const listOfContacts = await listContacts();
   const deletedContactIndex = listOfContacts.findIndex(
     (contact) => contact.id === contactId);
@@ -39,7 +39,7 @@ export const removeContact = async (contactId) => {
   return null;
 };
 
-export const updateContactById = async (contactId, data) => {
+  const updateContactById = async (contactId, data) => {
   const listOfContacts = await listContacts();
   const updateContactIndex = listOfContacts.findIndex(
     (contact) => contact.id === contactId
@@ -52,4 +52,12 @@ export const updateContactById = async (contactId, data) => {
     return updatedContact;
   }
   return null;
+};
+
+export default {
+  listContacts,
+  getContactById,
+  addContact,
+  updateContactById,
+  removeContact,
 };
