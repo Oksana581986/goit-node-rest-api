@@ -4,7 +4,8 @@ import  { nanoid } from "nanoid";
 
 const contactsPath = path.resolve("db", "contacts.json");
 
-const updateContacts = async (listContacts) => fs.writeFile(contactsPath, JSON.stringify(listContacts, null, 2));
+const updateContacts = (listContacts) =>
+  fs.writeFile(contactsPath, JSON.stringify(listContacts, null, 2));
 
   const listContacts = async () => {
   const data = await fs.readFile(contactsPath);

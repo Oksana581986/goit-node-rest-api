@@ -1,19 +1,28 @@
 import Joi from "joi";
 
 const createContactSchema = Joi.object({
-    name: Joi.string().required(),
-    email: Joi.string().required(),
-    phone: Joi.string().required(),
-})
+  name: Joi.string().min(3).max(30).required(),
+  email: Joi.string()
+    .email({ minDomainSegments: 2, tlds: { allow: ["com", "net"] } })
+    .required()
+    .messages({ "string.pattern.base": "XXXXX@XXX.com/XXXXX@XXX.net" }),
+  phone: Joi.string()
+    .pattern(/^\(\d{3}\) \d{3}-\d{4}$/)
+    .required()
+    .messages({ "string.pattern.base": "(XXX) XXX-XXXX" }),
+});
 
 const updateContactSchema = Joi.object({
-    name: Joi.string(),
-    email: Joi.string(),
-    phone: Joi.string(),   
-})
-
+  name: Joi.string().min(3).max(30),
+  email: Joi.string()
+    .email({ minDomainSegments: 2, tlds: { allow: ["com", "net"] } })
+    .messages({ "string.pattern.base": "XXXXX@XXX.com/XXXXX@XXX.net" }),
+  phone: Joi.string()
+    .pattern(/^\(\d{3}\) \d{3}-\d{4}$/)
+    .messages({ "string.pattern.base": "(XXX) XXX-XXXX" }),
+});
 
 export default {
-    createContactSchema,
-    updateContactSchema,
-  };
+  createContactSchema,
+  updateContactSchema,
+};
