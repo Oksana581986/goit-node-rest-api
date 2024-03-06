@@ -1,7 +1,7 @@
 import HttpError from "../helpers/HttpError.js";
 import { ctrlWrapper } from "../helpers/ctrlWrapper.js";
 
-import contactsServices from "../services/contactsServices.js";
+import { contactsServices } from "../services/contactsServices.js";
 
 const getAllContacts = async (_, res) => {
   const result = await contactsServices.listContacts();

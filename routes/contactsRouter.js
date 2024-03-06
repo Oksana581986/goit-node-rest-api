@@ -17,6 +17,6 @@ contactsRouter.post("/", validateBody(contactsSchemas.createContactSchema), cont
 
 contactsRouter.put("/:id", isValidId, validateBody(contactsSchemas.updateContactSchema), contactsControllers.updateContact);
 
-contactsRouter.patch("/:id", isValidId, contactsControllers.updateStatusContact);
+contactsRouter.patch("/:id", isValidId, (contactsSchemas.updateContactStatusSchema), contactsControllers.updateStatusContact);
 
 export default contactsRouter;
