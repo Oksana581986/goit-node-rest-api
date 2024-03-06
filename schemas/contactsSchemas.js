@@ -10,6 +10,7 @@ const createContactSchema = Joi.object({
     .pattern(/^\(\d{3}\) \d{3}-\d{4}$/)
     .required()
     .messages({ "string.pattern.base": "(XXX) XXX-XXXX" }),
+  favorite: Joi.boolean(),
 });
 
 const updateContactSchema = Joi.object({
@@ -20,6 +21,7 @@ const updateContactSchema = Joi.object({
   phone: Joi.string()
     .pattern(/^\(\d{3}\) \d{3}-\d{4}$/)
     .messages({ "string.pattern.base": "(XXX) XXX-XXXX" }),
+  favorite: Joi.boolean(),
 });
 
 export default {
