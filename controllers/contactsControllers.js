@@ -1,7 +1,7 @@
 import HttpError from "../helpers/HttpError.js";
 import { ctrlWrapper } from "../helpers/ctrlWrapper.js";
 
-import { contactsServices } from "../services/contactsServices.js";
+import contactsServices from "../services/contactsServices.js";
 
 const getAllContacts = async (_, res) => {
   const result = await contactsServices.listContacts();
@@ -40,10 +40,9 @@ const updateContact = async (req, res) => {
   res.json(result);
 };
 
-const updateStatusContact = async(req, res) => {
+const updateStatusContact = async (req, res) => {
   const { id } = req.params;
-  const { favorite } = req.body;
-  const result = await contactsServices.updateStatusContact(id, { favorite });
+  const result = await contactsServices.updateContactById(id, req.body);
   if (!result) {
     throw HttpError(404);
   }
