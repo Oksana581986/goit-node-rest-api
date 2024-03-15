@@ -5,7 +5,7 @@ const findUser = filter => User.findOne(filter);
 
 const signup = async(data) => {
     const hashPassword = await bcrypt.hash(data.password, 10);
-    User.create({...data, password: hashPassword});
+    return User.create({ ...data, password: hashPassword });
 };
 
 
