@@ -33,38 +33,46 @@ const login = async(req, res) => {
     }
 
     const {_id: id} = user;
-    const payload = {
-        id,
-    }
+    const payload = { id };
 
-    const token = jwt.sign(payload, JWT_SECRET, {expiresIn: "23h"});
-    await authServices.updateUser({_id: id}, {token});
+    const token = jwt.sign(payload, JWT_SECRET, { expiresIn: "23h"} );
+    await authServices.updateUser({ _id: id }, { token });
     
-    res.json({
-        token,
-    })
-}
+    res.json({ token })
+};
 
 const getCurrent = async(req, res) => {
     const { email, subscription } = req.user;
 
-        res.json({
-            email,
-            subscription
-        })
-}
+        res.json({ email, subscription })
+};
 
 const logout = async(req, res) => {
     const {_id} = req.user;
-    await authServices.updateUser({_id}, {token:""});
+    const user = await authServices.findUser({ _id });
+    if (!user) {
+      throw HttpError(401, "Not authorized");
+    }
 
+    await authServices.updateUser({_id}, {token:""});
     res.json({ message: "Signout success" })
 
-}
+};
+
+const variousSubscription = async (req, res) => {
+    const { _id } = req.user;
+    const { subscription } = req.body;
+    const updatedUser = await updateUser(_id, { subscription });
+    if (!updatedUser) {
+      return res.status(400).json({ error: "Invalid subscription value" });
+    }
+    res.json({ message: "Successfully Updated" });
+  };
 
 export default {
     signup: ctrlWrapper(signup),
     login: ctrlWrapper(login),
     getCurrent: ctrlWrapper(getCurrent),
     logout: ctrlWrapper(logout),
+    variousSubscription: ctrlWrapper(variousSubscription),
 }
