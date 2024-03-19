@@ -4,8 +4,12 @@ import contactsControllers from "../controllers/contactsControllers.js";
 import validateBody from "../helpers/validateBody.js";
 import contactsSchemas from "../schemas/contactsSchemas.js";
 import isValidId from "../middlewares/isValidid.js";
+import authenticate from "../middlewares/authenticate.js";
+
 
 const contactsRouter = express.Router();
+
+contactsRouter.use(authenticate);
 
 contactsRouter.get("/", contactsControllers.getAllContacts);
 
@@ -17,6 +21,6 @@ contactsRouter.post("/", validateBody(contactsSchemas.createContactSchema), cont
 
 contactsRouter.put("/:id", isValidId, validateBody(contactsSchemas.updateContactSchema), contactsControllers.updateContact);
 
-contactsRouter.patch("/:id", isValidId, validateBody(contactsSchemas.updateStatusContactSchema), contactsControllers.updateStatusContact);
+contactsRouter.patch("/:id/favorite", isValidId, validateBody(contactsSchemas.updateStatusContactSchema), contactsControllers.updateStatusContact);
 
 export default contactsRouter;
