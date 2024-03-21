@@ -2,6 +2,13 @@ import HttpError from "../helpers/HttpError.js";
 import { ctrlWrapper } from "../helpers/ctrlWrapper.js";
 
 import contactsServices from "../services/contactsServices.js";
+import fs from "fs/promises";
+import path from "path";
+// import cloudinary from "../helpers/cloudinary.js";
+
+
+const avatarsPath = path.resolve("public", "avatars");
+console.log(avatarsPath);
 
 const getAllContacts = async (_, res) => {
   const { _id: owner } = req.user;
@@ -34,7 +41,15 @@ const deleteContact = async (req, res) => {
 
 const createContact = async (req, res) => {
   const { _id: owner } = req.user;
-  const result = await contactsServices.addContact({ ...req.body, owner });
+  const {path: oldPath, filename} = req.file;
+  // const { url: avatar} = await cloudinary.uploader.upload(req.file.path, {
+  //   folder: "avatars"
+  // })
+  // await fs.unlink(req.file.path);
+  const newPath = path.join(avatarsPath, filename);
+  await fs.rename(oldPath, newPath);
+  const avatar = path.join("avatars", filename);
+  const result = await contactsServices.addContact({ ...req.body, avatar, owner });
   res.status(201).json(result);
 };
 

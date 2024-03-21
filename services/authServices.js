@@ -13,9 +13,12 @@ const validatePassword = (password, hashPassword) => bcrypt.compare(password, ha
 
 const updateUser = (filter, data) => User.findOneAndUpdate(filter, data);
 
+const deleteUsers = filter => User.deleteMany(filter);
+
 export default {
 findUser,
 signup,
 validatePassword,
 updateUser,
+deleteUsers,
 };
