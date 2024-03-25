@@ -34,9 +34,8 @@ const deleteContact = async (req, res) => {
 
 const createContact = async (req, res) => {
   const { _id: owner } = req.user;
-  console.log(req.body);
-  console.log(req.file);
-  const result = await contactsServices.addContact({ ...req.body, owner });
+  const { name, email, phone, favorite } = req.body;
+  const result = await contactsServices.addContact({name, email, phone, favorite}, owner);
   res.status(201).json(result);
 };
 

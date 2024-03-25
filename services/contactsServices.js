@@ -6,7 +6,7 @@ const getContactById = (id) => Contact.findById(id);
 
 const getOneContact = filter => Contact.findOne(filter);
 
-const addContact = (data) => Contact.create(data);
+const addContact = ({ name, email, phone, favorite }, owner) => Contact.create({ name, email, phone, favorite, owner });
 
 const updateContactById = (id, data) => Contact.findByIdAndUpdate(id, data);
 

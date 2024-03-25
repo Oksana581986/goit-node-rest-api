@@ -4,11 +4,15 @@ import { ctrlWrapper } from "../helpers/ctrlWrapper.js";
 import authServices from "../services/authServices.js";
 import path from "path";
 import fs from "fs/promises";
-import gravatar from "gravatar";
-import Jimp from "jimp";
+import dotenv from "dotenv";
+import imageSize from "../middlewares/imageSize.js";
+import { v4 as uuidv4 } from "uuid";
 
+dotenv.config();
 
 const {JWT_SECRET} = process.env;
+
+const tmpPath = path.resolve("tmp");
 
 const avatarsPath = path.resolve("public", "avatars");
 console.log(avatarsPath);
@@ -19,15 +23,12 @@ const signup = async(req, res) => {
     if(user) {
         throw HttpError(409, "Email in use");
     }
-const avatarURL = gravatar.url(email);
-const newUser = await authServices.signup({ ...req.body, avatarURL });
+
+const newUser = await authServices.signup(req.body);
 res.status(201).json({
-  user: {
     email: newUser.email,
     subscription: newUser.subscription,
-    avatarUrl: newUser.avatarURL,
-  },
-});
+  });
 };
 
 const login = async(req, res) => {
@@ -65,7 +66,7 @@ const logout = async(req, res) => {
     }
 
     await authServices.updateUser({_id}, {token:""});
-    res.json({ message: "Signout success" })
+    res.json({ message: "Logout success" })
 
 };
 
@@ -79,30 +80,31 @@ const variousSubscription = async (req, res) => {
     res.json({ message: "Successfully Updated" });
   };
 
-  const updateAvatar = async (req, res) => {
-    const { _id: id } = req.user;
+const updateAvatar = async (req, res) => {
     if (!req.file) {
-      throw HttpError(400, "Avatar not found");
+      return res.status(400).json({ message: "The file was not attached" });
     }
-    const { path: oldPath, filename } = req.file;
-    const newPath = path.join(avatarsPath, filename);
-
-    Jimp.read(oldPath)
-    .then((image) => {
-      return image.cover(250, 250).write(newPath);
-    })
-    .catch((err) => {
-      console.error(err);
-    });
+    const { path: oldPath, originalname } = req.file;
+    const { _id: userId } = req.user;
+  
+    await fs.mkdir(tmpPath, { recursive: true });
+  
+    await imageSize(oldPath);
+  
+    const newImageName = `${userId}_${uuidv4()}${path.extname(originalname)}`;
+  
+    const newPath = path.join(avatarsPath, newImageName);
     await fs.rename(oldPath, newPath);
-
-    const avatarURL = path.join("avatars", filename);
-    const user = await authServices.updateUser({ _id: id }, { avatarURL });
-    res.json({
-      avatarURL: user.avatarURL,
+  
+    const updatedUser = await authServices.updateUser(userId, {
+      avatarURL: `/avatars/${newImageName}`,
+    });
+  
+    res.status(200).json({
+      avatarURL: updatedUser.avatarURL,
     });
   };
-  
+
 export default {
     signup: ctrlWrapper(signup),
     login: ctrlWrapper(login),
@@ -110,7 +112,4 @@ export default {
     logout: ctrlWrapper(logout),
     variousSubscription: ctrlWrapper(variousSubscription),
     updateAvatar: ctrlWrapper(updateAvatar),
-
 }
-
-eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2MDE0N2EyMzczMDIwYmEzNzFiNGY2MSIsImlhdCI6MTcxMTM2MDg2OCwiZXhwIjoxNzExNDQzNjY4fQ.nE2jCJ3jWbZYYNY2EJKlKDtxf7Kwb5fgY6MXTHwPYRA
