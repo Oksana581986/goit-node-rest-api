@@ -21,11 +21,13 @@ const signup = async(req, res) => {
     }
 const avatarURL = gravatar.url(email);
 const newUser = await authServices.signup({ ...req.body, avatarURL });
-    res.status(201).json({
-        email: newUser.email,
-        subscription: newUser.subscription,
-        avatarURL: newUser.avatarURL,
-    })
+res.status(201).json({
+  user: {
+    email: newUser.email,
+    subscription: newUser.subscription,
+    avatarUrl: newUser.avatarURL,
+  },
+});
 };
 
 const login = async(req, res) => {
@@ -79,6 +81,9 @@ const variousSubscription = async (req, res) => {
 
   const updateAvatar = async (req, res) => {
     const { _id: id } = req.user;
+    if (!req.file) {
+      throw HttpError(400, "Avatar not found");
+    }
     const { path: oldPath, filename } = req.file;
     const newPath = path.join(avatarsPath, filename);
 
@@ -107,3 +112,5 @@ export default {
     updateAvatar: ctrlWrapper(updateAvatar),
 
 }
+
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2MDE0N2EyMzczMDIwYmEzNzFiNGY2MSIsImlhdCI6MTcxMTM2MDg2OCwiZXhwIjoxNzExNDQzNjY4fQ.nE2jCJ3jWbZYYNY2EJKlKDtxf7Kwb5fgY6MXTHwPYRA
