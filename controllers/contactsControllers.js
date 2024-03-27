@@ -1,7 +1,7 @@
 import HttpError from "../helpers/HttpError.js";
 import { ctrlWrapper } from "../helpers/ctrlWrapper.js";
-
 import contactsServices from "../services/contactsServices.js";
+
 
 const getAllContacts = async (_, res) => {
   const { _id: owner } = req.user;
@@ -34,7 +34,8 @@ const deleteContact = async (req, res) => {
 
 const createContact = async (req, res) => {
   const { _id: owner } = req.user;
-  const result = await contactsServices.addContact({ ...req.body, owner });
+  const { name, email, phone, favorite } = req.body;
+  const result = await contactsServices.addContact({name, email, phone, favorite}, owner);
   res.status(201).json(result);
 };
 
