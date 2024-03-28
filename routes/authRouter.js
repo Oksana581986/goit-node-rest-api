@@ -13,6 +13,10 @@ authRouter.post("/signup", validateBody(usersSchemas.userSignupSchema), authCont
 
 authRouter.post("/login", validateBody(usersSchemas.userSigninSchema), authControllers.login);
 
+authRouter.get("/verify/:verificationToken", authControllers.verify);
+
+authRouter.post ("/verify", validateBody(usersSchemas.userEmailSchema), authControllers.resendVerify);
+
 authRouter.get("/current",authenticate, authControllers.getCurrent);
 
 authRouter.post("/logout", authenticate, authControllers.logout);

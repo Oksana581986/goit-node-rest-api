@@ -6,6 +6,7 @@
     "dev": "nodemon ./app.js"
   },
   "dependencies": {
+    "@elasticemail/elasticemail-client": "^4.0.23",
     "bcrypt": "^5.1.1",
     "bcryptjs": "^2.4.3",
     "cloudinary": "^2.0.3",
@@ -20,6 +21,7 @@
     "morgan": "^1.10.0",
     "multer": "^1.4.5-lts.1",
     "nanoid": "^5.0.6",
+    "nodemailer": "^6.9.13",
     "supertest": "^6.3.4",
     "uuidv4": "^6.2.13"
   },
